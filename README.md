@@ -1,4 +1,8 @@
 ### Install
+`git clone https://github.com/lisiy50/swilv-web.git swivl-test-oleg`
+
+`cd swivl-test-oleg` 
+
 `composer install`
 
 #### Configuration
