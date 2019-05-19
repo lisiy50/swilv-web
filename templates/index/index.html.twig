@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index page{% endblock %}
+
+{% block body %}
+    <h1>Index page</h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col">
+
+
+            <h3 id="install">Install</h3>
+            <p><code>composer install</code></p>
+            <h4 id="configuration">Configuration</h4>
+            <p>copy <code>.env</code> to <code>.env.local</code> file and change DATABASE_URL configuration:</p>
+            <p><code>DATABASE_URL=&quot;mysql://db_user:db_password@127.0.0.1:3306/db_name</code></p>
+            <p>Then run command <code>php bin/console doctrine:database:create</code> to create DB
+                and <code>php bin/console doctrine:migrations:migrate</code> to create DB structure.</p>
+            <h4 id="run-project">Run project</h4>
+            <p><code>php bin/console server:run</code>
+                default host <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
+            <h4 id="requests">Requests</h4>
+            <p>GET /api/school_classes/</p>
+            <p>POST /api/school_classes/ data example: <code>{&quot;name&quot;:&quot;new name&quot;,&quot;isActive&quot;:true}</code></p>
+            <p>PUT /api/school_classes/{id} data example: <code>{&quot;name&quot;:&quot;new name&quot;,&quot;isActive&quot;:false}</code></p>
+            <p>DELETE /api/school_classes/{id}</p>
+            <h1 id="task-2-sql-queries">TASK 2 SQL queries</h1>
+            <p><a href="https://gist.github.com/lisiy50/e3abdcc3dd9550c9d8efbef26e274543">https://gist.github.com/lisiy50/e3abdcc3dd9550c9d8efbef26e274543</a></p>
+            <h5 id="1-a">1.a</h5>
+            <p><code>select f.name, if (p.phone is not null, p.phone, &#39;-&#39;) phoneNumber from firm f
+                    left join phone p on f.id = p.firmid
+                    group by f.id;</code></p>
+            <h5 id="1-b">1.b</h5>
+            <p><code>select f.* from firm f
+                    left join phone p on f.id = p.firmid and p.firmid is null;</code></p>
+            <h5 id="1-c">1.c</h5>
+            <p><code>select f.* from firm f
+                    join phone p on f.id = p.firmid
+                    group by f.id
+                    having count(f.id) &gt; 1;</code></p>
+            <h5 id="1-d">1.d</h5>
+            <p><code>select f.* from firm f
+                    left join phone p on f.id = p.firmid
+                    group by f.id
+                    having count(f.id) &lt; 2;</code></p>
+            <h5 id="1-e">1.e</h5>
+            <p><code>select f.*, count(f.id) countPhones from firm f
+                    left join phone p on f.id = p.firmid
+                    group by f.id
+                    order by countPhones desc
+                    limit 1;</code></p>
+            <h5 id="2-a">2.a</h5>
+            <p><code>select c.name companyName, g.name productName, if (sum(s.quantity), sum(s.quantity), &#39;No Data&#39;) totalQuantity, date_format(s.shipdate, &#39;%d/%m/%Y&#39;) lastShipmentDate from company c
+                    left join shipment s on c.compid = s.compid
+                    left join goods g on s.goodid = g.goodid
+                    group by c.compid, g.goodid
+                    order by c.name, g.name, s.shipdate desc;</code></p>
+            <h5 id="2-b">2.b</h5>
+            <p><code>select c.name companyName, g.name productName, if (sum(s.quantity), sum(s.quantity), &#39;No Data&#39;) totalQuantity, date_format(s.shipdate, &#39;%d/%m/%Y&#39;) lastShipmentDate from company c
+                    left join shipment s on c.compid = s.compid
+                    left join goods g on s.goodid = g.goodid
+                    where s.shipdate &gt;= (date(now()) - interval 40 day)
+                    group by c.compid, g.goodid
+                    order by c.name, g.name, s.shipdate desc;</code></p>
+
+
+        </div>
+    </div>
+
+
+{% endblock %}
